@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 import math
 
-import Qt
-from Qt import QtGui, QtCore, QtWidgets
+from PySide6 import QtGui, QtCore, QtWidgets
+from PySide6.QtOpenGLWidgets import QOpenGLWidget
 
 # use QOpenGLWidget instead of the deprecated QGLWidget to avoid probelms with Wayland
-if Qt.IsPySide2:
-    from PySide2.QtWidgets import QOpenGLWidget
-elif Qt.IsPyQt5:
-    from PyQt5.QtWidgets import QOpenGLWidget
+# if Qt.IsPySide2:
+#     from PySide2.QtWidgets import QOpenGLWidget
+# elif Qt.IsPyQt5:
+#     from PyQt5.QtWidgets import QOpenGLWidget
 
 from .dialogs import BaseDialog, FileDialog
 from .scene import NodeScene
@@ -95,7 +95,7 @@ class NodeViewer(QtWidgets.QGraphicsView):
         self._SLICER_PIPE.setVisible(False)
         self.scene().addItem(self._SLICER_PIPE)
 
-        self._undo_stack = QtWidgets.QUndoStack(self)
+        self._undo_stack = QtGui.QUndoStack(self)
         self._search_widget = TabSearchMenuWidget()
         self._search_widget.search_submitted.connect(self._on_search_submitted)
 
@@ -430,6 +430,18 @@ class NodeViewer(QtWidgets.QGraphicsView):
                 self.scene().setSelectionArea(
                     path, QtCore.Qt.IntersectsItemShape
                 )
+    # TODO:
+    # TypeError: 'PySide6.QtWidgets.QGraphicsScene.setSelectionArea'
+    # called with wrong argument types:
+    #     PySide6.QtWidgets.QGraphicsScene.setSelectionArea(QPainterPath, ItemSelectionMode)
+    # Supported signatures:
+    # PySide6.QtWidgets.QGraphicsScene.setSelectionArea(PySide6.QtGui.QPainterPath, PySide6.QtGui.QTransform)
+    # PySide6.QtWidgets.QGraphicsScene.setSelectionArea(
+    #     PySide6.QtGui.QPainterPath,
+    #     PySide6.QtCore.Qt.ItemSelectionOperation = Instance(Qt.ReplaceSelection),
+    #     PySide6.QtCore.Qt.ItemSelectionMode = Instance(Qt.IntersectsItemShape),
+    #     PySide6.QtGui.QTransform = Default(QTransform)
+    # )
                 self.scene().update(map_rect)
 
                 if self.SHIFT_state or self.CTRL_state:
@@ -481,7 +493,19 @@ class NodeViewer(QtWidgets.QGraphicsView):
             delta = event.angleDelta().y()
             if delta == 0:
                 delta = event.angleDelta().x()
-        self._set_viewer_zoom(delta, pos=event.pos())
+        self._set_viewer_zoom(delta, pos=event.position())
+    # TODO
+    # TypeError: 'PySide6.QtWidgets.QGraphicsView.mapToScene'
+    # called with wrong argument types:
+    #     PySide6.QtWidgets.QGraphicsView.mapToScene(QPointF)
+    # Supported signatures:
+    # PySide6.QtWidgets.QGraphicsView.mapToScene(PySide6.QtGui.QPainterPath)
+    # PySide6.QtWidgets.QGraphicsView.mapToScene(PySide6.QtCore.QPoint)
+    # PySide6.QtWidgets.QGraphicsView.mapToScene(
+    #     Union[PySide6.QtGui.QPolygon, Sequence[PySide6.QtCore.QPoint], PySide6.QtCore.QRect])
+    # PySide6.QtWidgets.QGraphicsView.mapToScene(PySide6.QtCore.QRect)
+    # PySide6.QtWidgets.QGraphicsView.mapToScene(int, int)
+    # PySide6.QtWidgets.QGraphicsView.mapToScene(int, int, int, int)
 
     def dropEvent(self, event):
         pos = self.mapToScene(event.pos())

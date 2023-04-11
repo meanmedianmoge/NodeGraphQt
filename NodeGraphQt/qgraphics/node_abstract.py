@@ -1,5 +1,5 @@
 #!/usr/bin/python
-from Qt import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
 
 from ..constants import (Z_VAL_NODE, NODE_WIDTH, NODE_HEIGHT, ITEM_CACHE_MODE)
 
@@ -11,7 +11,7 @@ class AbstractNodeItem(QtWidgets.QGraphicsItem):
 
     def __init__(self, name='node', parent=None):
         super(AbstractNodeItem, self).__init__(parent)
-        self.setFlags(self.ItemIsSelectable | self.ItemIsMovable)
+        self.setFlags(self.GraphicsItemFlag.ItemIsSelectable | self.GraphicsItemFlag.ItemIsMovable)
         self.setCacheMode(ITEM_CACHE_MODE)
         self.setZValue(Z_VAL_NODE)
         self._properties = {

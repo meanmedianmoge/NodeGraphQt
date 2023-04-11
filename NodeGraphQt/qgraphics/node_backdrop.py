@@ -1,5 +1,5 @@
 #!/usr/bin/python
-from Qt import QtGui, QtCore, QtWidgets
+from PySide6 import QtGui, QtCore, QtWidgets
 
 from .node_abstract import AbstractNodeItem
 from .pipe import Pipe
@@ -20,9 +20,9 @@ class BackdropSizer(QtWidgets.QGraphicsItem):
 
     def __init__(self, parent=None, size=6.0):
         super(BackdropSizer, self).__init__(parent)
-        self.setFlag(self.ItemIsSelectable, True)
-        self.setFlag(self.ItemIsMovable, True)
-        self.setFlag(self.ItemSendsScenePositionChanges, True)
+        self.setFlag(self.GraphicsItemFlag.ItemIsSelectable, True)
+        self.setFlag(self.GraphicsItemFlag.ItemIsMovable, True)
+        self.setFlag(self.GraphicsItemFlag.ItemSendsScenePositionChanges, True)
         self.setCursor(QtGui.QCursor(QtCore.Qt.SizeFDiagCursor))
         self.setToolTip('double-click auto resize')
         self._size = size

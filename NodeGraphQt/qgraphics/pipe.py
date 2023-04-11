@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import math
 
-from Qt import QtCore, QtGui, QtWidgets
+from PySide6 import QtCore, QtGui, QtWidgets
 
 from .port import PortItem
 from ..constants import (
@@ -31,7 +31,7 @@ class Pipe(QtWidgets.QGraphicsPathItem):
         super(Pipe, self).__init__()
         self.setZValue(Z_VAL_PIPE)
         self.setAcceptHoverEvents(True)
-        self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable)
+        self.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsSelectable)
         self._color = PIPE_DEFAULT_COLOR
         self._style = PIPE_STYLE_DEFAULT
         self._active = False
@@ -99,7 +99,7 @@ class Pipe(QtWidgets.QGraphicsPathItem):
 
         painter.save()
         painter.setPen(pen)
-        painter.setRenderHint(painter.Antialiasing, True)
+        painter.setRenderHint(painter.RenderHint.Antialiasing, True)
         painter.drawPath(self.path())
 
         # draw arrow
@@ -338,7 +338,7 @@ class Pipe(QtWidgets.QGraphicsPathItem):
         return False
 
     def itemChange(self, change, value):
-        if change == self.ItemSelectedChange and self.scene():
+        if change == self.GraphicsItemChange.ItemSelectedChange and self.scene():
             self.reset()
             if value:
                 self.highlight()
@@ -418,7 +418,7 @@ class LivePipe(Pipe):
 
         painter.save()
         painter.setPen(pen)
-        painter.setRenderHint(painter.Antialiasing, True)
+        painter.setRenderHint(painter.RenderHint.Antialiasing, True)
         painter.drawPath(self.path())
 
         cen_x = self.path().pointAtPercent(0.5).x()
