@@ -142,7 +142,7 @@ class NodeViewer(QtWidgets.QGraphicsView):
             pos (QtCore.QPoint): mapped position.
         """
         if pos:
-            pos = self.mapToScene(pos)
+            pos = self.mapToScene(pos.toPoint())
         if sensitivity is None:
             scale = 1.001 ** value
             self.scale(scale, scale, pos)
@@ -290,7 +290,7 @@ class NodeViewer(QtWidgets.QGraphicsView):
             return
 
         # pan mode.
-        if self.ALT_state:
+        if not self.ALT_state:
             return
 
         items = self._items_near(map_pos, None, 20, 20)
@@ -398,7 +398,7 @@ class NodeViewer(QtWidgets.QGraphicsView):
         super(NodeViewer, self).mouseReleaseEvent(event)
 
     def mouseMoveEvent(self, event):
-        if self.ALT_state and self.SHIFT_state:
+        if not self.ALT_state and self.SHIFT_state:
             if self.LMB_state and self._SLICER_PIPE.isVisible():
                 p1 = self._SLICER_PIPE.path().pointAtPercent(0)
                 p2 = self.mapToScene(self._previous_pos)
@@ -408,11 +408,11 @@ class NodeViewer(QtWidgets.QGraphicsView):
             super(NodeViewer, self).mouseMoveEvent(event)
             return
 
-        if self.MMB_state and self.ALT_state:
+        if self.MMB_state and not self.ALT_state:
             pos_x = (event.x() - self._previous_pos.x())
             zoom = 0.1 if pos_x > 0 else -0.1
             self._set_viewer_zoom(zoom, 0.05, pos=event.pos())
-        elif self.MMB_state or (self.LMB_state and self.ALT_state):
+        elif self.MMB_state or (self.LMB_state and not self.ALT_state):
             pos_x = (event.x() - self._previous_pos.x())
             pos_y = (event.y() - self._previous_pos.y())
             self._set_viewer_pan(pos_x, pos_y)
@@ -602,11 +602,11 @@ class NodeViewer(QtWidgets.QGraphicsView):
                 The event handler from the QtWidgets.QGraphicsScene
         """
         # pipe slicer enabled.
-        if self.ALT_state and self.SHIFT_state:
+        if not self.ALT_state and self.SHIFT_state:
             return
 
         # viewer pan mode.
-        if self.ALT_state:
+        if not self.ALT_state:
             return
 
         if self._LIVE_PIPE.isVisible():
