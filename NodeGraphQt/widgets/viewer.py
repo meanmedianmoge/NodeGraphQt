@@ -427,21 +427,7 @@ class NodeViewer(QtWidgets.QGraphicsView):
                 path = QtGui.QPainterPath()
                 path.addRect(map_rect)
                 self._rubber_band.setGeometry(rect)
-                self.scene().setSelectionArea(
-                    path, QtCore.Qt.IntersectsItemShape
-                )
-    # TODO:
-    # TypeError: 'PySide6.QtWidgets.QGraphicsScene.setSelectionArea'
-    # called with wrong argument types:
-    #     PySide6.QtWidgets.QGraphicsScene.setSelectionArea(QPainterPath, ItemSelectionMode)
-    # Supported signatures:
-    # PySide6.QtWidgets.QGraphicsScene.setSelectionArea(PySide6.QtGui.QPainterPath, PySide6.QtGui.QTransform)
-    # PySide6.QtWidgets.QGraphicsScene.setSelectionArea(
-    #     PySide6.QtGui.QPainterPath,
-    #     PySide6.QtCore.Qt.ItemSelectionOperation = Instance(Qt.ReplaceSelection),
-    #     PySide6.QtCore.Qt.ItemSelectionMode = Instance(Qt.IntersectsItemShape),
-    #     PySide6.QtGui.QTransform = Default(QTransform)
-    # )
+                self.scene().setSelectionArea(path)
                 self.scene().update(map_rect)
 
                 if self.SHIFT_state or self.CTRL_state:
@@ -494,18 +480,6 @@ class NodeViewer(QtWidgets.QGraphicsView):
             if delta == 0:
                 delta = event.angleDelta().x()
         self._set_viewer_zoom(delta, pos=event.position())
-    # TODO
-    # TypeError: 'PySide6.QtWidgets.QGraphicsView.mapToScene'
-    # called with wrong argument types:
-    #     PySide6.QtWidgets.QGraphicsView.mapToScene(QPointF)
-    # Supported signatures:
-    # PySide6.QtWidgets.QGraphicsView.mapToScene(PySide6.QtGui.QPainterPath)
-    # PySide6.QtWidgets.QGraphicsView.mapToScene(PySide6.QtCore.QPoint)
-    # PySide6.QtWidgets.QGraphicsView.mapToScene(
-    #     Union[PySide6.QtGui.QPolygon, Sequence[PySide6.QtCore.QPoint], PySide6.QtCore.QRect])
-    # PySide6.QtWidgets.QGraphicsView.mapToScene(PySide6.QtCore.QRect)
-    # PySide6.QtWidgets.QGraphicsView.mapToScene(int, int)
-    # PySide6.QtWidgets.QGraphicsView.mapToScene(int, int, int, int)
 
     def dropEvent(self, event):
         pos = self.mapToScene(event.pos())
@@ -606,6 +580,7 @@ class NodeViewer(QtWidgets.QGraphicsView):
             return
 
         # viewer pan mode.
+        # TODO: Look into why these changes require double-clicks for selections
         if not self.ALT_state:
             return
 
